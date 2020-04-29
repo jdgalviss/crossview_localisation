@@ -9,12 +9,12 @@ import os
 
 # --------------  configuration parameters  -------------- #
 # the type of network to be used: "CVM-NET-I" or "CVM-NET-II"
-network_type = 'CVM-NET-II'
+network_type = 'CVM-NET-I'
 
-batch_size = 12
-is_training = True
+batch_size = 5
+is_training = False
 loss_weight = 10.0
-number_of_epoch = 5
+number_of_epoch = 1
 
 learning_rate_val = 1e-5
 keep_prob_val = 0.8
@@ -121,8 +121,8 @@ def train(start_epoch=1):
     # run model
     print('run model...')
     config = tf.ConfigProto(log_device_placement=False, allow_soft_placement=True)
-    config.gpu_options.allow_growth = True
-    config.gpu_options.per_process_gpu_memory_fraction = 0.9
+    #config.gpu_options.allow_growth = True
+    #config.gpu_options.per_process_gpu_memory_fraction = 0.9
     with tf.Session(config=config) as sess:
         sess.run(tf.global_variables_initializer())
 
@@ -135,24 +135,25 @@ def train(start_epoch=1):
         # Train
         for epoch in range(start_epoch, start_epoch + number_of_epoch):
             iter = 0
-            while True:
+            if is_training:
                 # train
-                batch_sat, batch_grd = input_data.next_pair_batch(batch_size)
-                if batch_sat is None:
-                    break
+                while True:
+                    batch_sat, batch_grd = input_data.next_pair_batch(batch_size)
+                    if batch_sat is None:
+                        break
 
-                global_step_val = tf.train.global_step(sess, global_step)
+                    global_step_val = tf.train.global_step(sess, global_step)
 
-                feed_dict = {sat_x: batch_sat, grd_x: batch_grd,
-                             learning_rate: learning_rate_val, keep_prob: keep_prob_val}
-                if iter % 20 == 0:
-                    _, loss_val = sess.run([train_step, loss], feed_dict=feed_dict)
-                    print('global %d, epoch %d, iter %d: loss : %.4f' %
-                          (global_step_val, epoch, iter, loss_val))
-                else:
-                    sess.run(train_step, feed_dict=feed_dict)
+                    feed_dict = {sat_x: batch_sat, grd_x: batch_grd,
+                                 learning_rate: learning_rate_val, keep_prob: keep_prob_val}
+                    if iter % 20 == 0:
+                        _, loss_val = sess.run([train_step, loss], feed_dict=feed_dict)
+                        print('global %d, epoch %d, iter %d: loss : %.4f' %
+                              (global_step_val, epoch, iter, loss_val))
+                    else:
+                        sess.run(train_step, feed_dict=feed_dict)
 
-                iter += 1
+                    iter += 1
             
             # ---------------------- validation ----------------------
             print('validate...')

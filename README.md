@@ -1,5 +1,6 @@
 # CVM-Net: Cross-View Matching Network for Image-Based Ground-to-Aerial Geo-Localisation
 
+docker run -v `pwd`/src:/usr/src/app/src -p 8888:8888 -it --rm --gpus all crossview
 
 This project is an initial research on image-based geo-localisation with satellite imagery as reference map. The problem is regarded as image retrieval problem: to query a ground-level image from geo-tagged satellite image database. We propose a deep learning framework to extract global descriptors of ground and satellite images. VGG16 is used to extract local features and NetVLAD layers is used to aggregate to global descriptors. A Siamese-like architecture is used to train the network. To query a ground-level image, we retrieve the satellite image with smallest distance between descriptor of the query image and the satellite image. The position (latitude and longitude) of satellite image centre is the position of the query.
 

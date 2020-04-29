@@ -10,8 +10,8 @@ class InputData:
 
     def __init__(self):
 
-        self.train_list = self.img_root + 'splits/train-19zl.csv'
-        self.test_list = self.img_root + 'splits/val-19zl.csv'
+        self.train_list = self.img_root + 'data.csv'
+        self.test_list = self.img_root + 'data.csv'
 
         print('InputData::__init__: load %s' % self.train_list)
         self.__cur_id = 0  # for training
