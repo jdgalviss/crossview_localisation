@@ -1,6 +1,21 @@
 # CVM-Net: Cross-View Matching Network for Image-Based Ground-to-Aerial Geo-Localisation
+## Instructions Dockerfile
 
-docker run -v `pwd`/src:/usr/src/app/src -p 8888:8888 -it --rm --gpus all crossview
+1. Install [Docker-engine](https://docs.docker.com/engine/install/ubuntu/) and [nvidia-docker](https://github.com/NVIDIA/nvidia-docker) (optional for gpu support). If you don't have gpu or the right drivers installed, in the `Dockerfile` change the line `FROM tensorflow/tensorflow:1.4.1-gpu-py3` for `FROM tensorflow/tensorflow:1.4.1-py3`
+2. Build Dockerfile
+	``` bash
+	docker build . -t crossview
+	```
+3. In order to run with gpu support:
+	``` bash
+	docker run -v `pwd`/src:/usr/src/app/src -p 8888:8888 -it --rm --gpus all crossview
+	```
+3. In order to run without gpu support, 
+	``` bash
+	docker run -v `pwd`/src:/usr/src/app/src -p 8888:8888 -it --rm deep_descriptors
+	```
+4. Go to the jupyter notebook `src/CVM-Net/crossview_descriptor_extraction.ipynb` for an inference sample
+
 
 This project is an initial research on image-based geo-localisation with satellite imagery as reference map. The problem is regarded as image retrieval problem: to query a ground-level image from geo-tagged satellite image database. We propose a deep learning framework to extract global descriptors of ground and satellite images. VGG16 is used to extract local features and NetVLAD layers is used to aggregate to global descriptors. A Siamese-like architecture is used to train the network. To query a ground-level image, we retrieve the satellite image with smallest distance between descriptor of the query image and the satellite image. The position (latitude and longitude) of satellite image centre is the position of the query.
 

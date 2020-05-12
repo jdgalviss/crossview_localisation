@@ -1,3 +1,6 @@
 *.ipynb_checkpoints
 *__pycache__
-src/Model
+*.ckpt*
+*checkpoint*
+*.pyc
+*.zip
